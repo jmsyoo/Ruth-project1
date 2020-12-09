@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+:root{
+    --blue:#337ab7;
+    --white:#fff;
+    --yellow:#f39c12;
+    --green:#00a65a;
+    --red:#dd4b39;
+    --navy:#001F3F;
+    --sky: #0c1445;
+    --ground: #684132;
+    --moon: #f4f1c9;
+    --star: #fff5f2;
+}
+
+*,
+*::after,
+*::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+html{
+    font-size: 10px;
+}
+body {
+    margin: 0;
+    background-color: whitesmoke;
+    width: 100vw;
+    height: 100vh;
+    font-weight: 400;
+    /* font-family: 'Indie Flower', cursive; */
+    font-family: 'Patrick Hand', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    width: 900px;
+    height: 100vh;
+    background-color: var(--sky);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /*padding: 1%;*/
+    color:white;
+    margin: auto;
+}
+.gamePanel{
+    width:100%;
+    height:75%;
+    background-color: var(--sky);
+    display:flex;
+    flex-direction:column;
+    /*border:1px solid white;*/
+}
+.gamePanel #sky {
+    background-color: var(--sky);
+    height:70%;
+    width:100%;
+    position: relative
+ }
+#ground{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:30%;
+    width:100%;
+    display:inline-block;
+    background-color: var(--ground);
+    border-top-right-radius:100%;
+    border-top-left-radius:100%;
+    vertical-align: middle;
+    text-align: center;
+    margin: auto;
+    flex-direction: column;
+}
+.board {
+    width: 100%;
+    height: 25%;
+    background-color: #0c1445;
+    /* display: flex;
+    justify-content: space-around; */
+}
+.board #life{
+    float: left;
+    color: var(--star);
+    font-size: 4rem;
+    width: 20%;
+    height: 20%;
+    margin: 1%;
+    
+}
+.board .sun{
+    width:150px;
+    height:150px;
+    display:inline-block;
+    background-color:#fdb813;
+    margin:auto;
+    text-align:center;
+    vertical-align:middle;
+    border-radius:50%;
+}
+.board .moon{
+    width:155px;
+    height:155px;
+    /* display:inline-block; */
+    background-color: var(--moon);
+    margin:2%;
+    text-align:center;
+    border-radius:50%;
+    float: right;
+    padding: 1%;
+    color: var(--sky);
+    font-size: 10rem;
+    /* font-weight: 700;; */
+}
+
+.star{
+    color: var(--star);
+    font-size: 3rem;
+}
+input{
+    height: 35px;
+    width: 30%;
+    padding: 1%;
+    text-align: center;
+    font-size: 2rem;
+    
+    border: none;
+}
+
+#nickName{
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    width: 30rem;
+}
+.btn-group{
+    margin-top: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:auto;
+    height: 50%;
+    vertical-align: middle;
+}
+.playBtn-group{ 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10rem;
+    height: 50%;
+    display: none;
+}
+#submitNickName{
+    height: 35px;
+    padding: 1%;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border: none;
+}
+#wordInput{
+    border-radius: 3px;
+    width: 30rem;
+}
+#quitBtn{
+    float: right;
+    height: 50px;
+    padding: 1%;
+    border-radius: 50%;
+    margin-right: 2rem;
+    border: none;
+    width: 50px;
+    background-color: var(--red);
+    color: var(--white);
+}

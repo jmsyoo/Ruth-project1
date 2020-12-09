@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+    <title>Typing War</title>
 </head>
 <body>
-    
+    <div class="container">
+        <div class="board">
+            <div id="life">
+                LIFE: 5
+            </div>
+            <!-- <div id="worldRecord" class="sun">
+                World Record
+            </div> -->
+            <div id="playerScore" class="moon">
+                <!-- Player Score -->
+                0
+            </div>
+
+        </div>
+
+        <div class="gamePanel">
+            <div id="sky">
+
+            </div>
+            <div id="ground">
+                <div class="btn-group">
+                    <input id="nickName" type="text" placeholder="ENTER NICKNAME">
+                    <button id="submitNickName">START</button>                       
+                </div>
+                <div class="playBtn-group">
+                    <input id="wordInput" type="text" placeholder="TYPE THE FALLING WORD">
+                    <button id="quitBtn">QUIT</button>     
+                </div>            
+            </div>
+        </div>
+
+    </div>
 </body>
 </html>
