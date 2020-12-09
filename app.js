@@ -70,7 +70,7 @@ class Game {
     // Find isOnGame Nickname
     const findName = this.data.map((item) => {
         if(item.isGameOn == true){
-            this.nickName = item.nickName;
+          this.nickName = item.nickName;
         }
     })
     findName;
@@ -78,7 +78,13 @@ class Game {
     //console.log(`${this.nickName} :  ${this.words}`); // Check if new user assign word array
   }
   findNickName(nickName){
-    
+    const index = this.data.map((item) => {
+      if(item.isGameOn == true){
+        return item.nickName;
+      }
+    }).indexOf(nickName);
+
+    return index;
   }
   setWords(nickName) {
     if (this.startGame == true) {
@@ -91,7 +97,7 @@ class Game {
       const level = this.data[index].level;
       this.drawSpeed = words.data[level - 1].drawSpeed;
       this.downSpeed = words.data[level - 1].downSpeed;
-      this.score = words.data[level -1 ].score;
+      this.score = words.data[level -1 ].point;
       return words.data[level - 1].words; // return words
     }
   }
@@ -166,6 +172,8 @@ $(() => {
   const $submitNickNameBtn = $("#submitNickName");
   const $nickNameValue = $("#nickName");
   const $quitBtn = $("#quitBtn");
+  var totalScore = 0;
+  var $playerScore = $("#playerScore");
 
   // Create instance
   const newGame = new Game($sky);
@@ -184,6 +192,9 @@ $(() => {
       const maxIndex = newGame.words.length;
 
       if (maxIndex == newGame.count) {
+        // console.log(
+        //   `${index} :  ${name} : ${score} this Score : ${newGame.score}`
+        // );
         clearInterval(drawingStars); // if words are all drawn clear draw function.
       }
     };
@@ -199,9 +210,26 @@ $(() => {
     fallingStars = setInterval(down, newGame.downSpeed);
   });
 
+  $wordInput.on("keyup", (event) => {
+    $(newGame.$divs).each(function (key, value) {
+      
+      let typed = $(event.target).val(); // typed value
+      if (typed === value.text()) {
+        totalScore = totalScore  + newGame.score;
+        const index = newGame.findNickName(newGame.nickName);
+        newGame.data[index].score = totalScore;
+        console.log(newGame.data);
+        $playerScore.text(totalScore);
+        // if typed value is matching with falling words
+        value.remove(); // remove falling word
+        $(event.target).val(""); // set input value default empty
+      }
+    });
+  });
   // Quit button to reset
   $quitBtn.on("click", (event) => {
     $nickNameValue.val("");
+    totalScore = 0;
     $(".playBtn-group").hide();
     $(".btn-group").fadeIn("slow");
 
@@ -212,18 +240,32 @@ $(() => {
     fallingStars = clearInterval(fallingStars)
     $sky.find(".star").remove();
     newGame.$divs.length = 0; // empty $divs array
+    $playerScore.text(0);
   });
 
-  $wordInput.on("keyup", (event) => {
-    $(newGame.$divs).each(function (key, value) {
-      let typed = $(event.target).val(); // typed value
-
-      if (typed === value.text()) {
-        console.log(newGame.data)
-        // if typed value is matching with falling words
-        value.remove(); // remove falling word
-        $(event.target).val(""); // set input value default empty
-      }
-    });
-  });
 });
+  
+
+  
+
+const data1 = [
+  {name : "prod1"},{name : "prod2"},{name : "prod3"}
+];
+
+const data2 = [
+  {name : "prod1", color: "red", onhand : 1},
+  {name : "prod1", color: "green", onhand : 2},
+  {name : "prod1", color: "blue", onhand : 3},
+
+  {name : "prod2", color: "red", onhand : 1},
+  {name : "prod2", color: "green", onhand : 2},
+  {name : "prod2", color: "blue", onhand : 3},
+
+  {name : "prod3", color: "red", onhand : 1},
+  {name : "prod3", color: "green", onhand : 2},
+  {name : "prod3", color: "blue", onhand : 3},
+];
+
+const data3 = [
+  {name : "prod1", color : ["red","green","blue"], onhand : [1,2,3] }
+]
