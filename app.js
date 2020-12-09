@@ -52,10 +52,14 @@ class Game {
     this.words = [];
     this.drawSpeed = null;
     this.downSpeed = null;
+    this.score = 0;
     this.$divs = [];
     this.$eq = $eq;
   }
   generatePlayer(nickName) {
+    this.words.length = 0; // reset array
+    this.count = 0; // reset count
+
     const newPlayer = new Player(nickName, this.level);
     this.startGame = true;
     newPlayer.isGameOn = this.startGame;
@@ -71,19 +75,23 @@ class Game {
     })
     findName;
     this.words = this.setWords(this.nickName);
+    //console.log(`${this.nickName} :  ${this.words}`); // Check if new user assign word array
+  }
+  findNickName(nickName){
+    
   }
   setWords(nickName) {
     if (this.startGame == true) {
       const words = new Words();
-      const index = this.data
-        .map((item) => {
+
+      const index = this.data.map((item) => {
           return item.nickName;
-        })
-        .indexOf(nickName);
+        }).indexOf(nickName);
 
       const level = this.data[index].level;
       this.drawSpeed = words.data[level - 1].drawSpeed;
       this.downSpeed = words.data[level - 1].downSpeed;
+      this.score = words.data[level -1 ].score;
       return words.data[level - 1].words; // return words
     }
   }
@@ -106,11 +114,10 @@ class Game {
       .css("text-align", "center")
       .text(this.words[this.count]);
         
+    //console.log(this.words[this.count]) // Check words are drawing ok.
     this.$divs.push($div);
     $div.appendTo(this.$eq);
     this.count++;
-
-    console.log(this.$divs)
   }
   setLeftWidth() {
     let body = $("body").width(); // Get body width
@@ -121,7 +128,8 @@ class Game {
     return randomLeft + extraLeft;
   }
   SetTop() {
-    const addTop = new Array(this.words.length);
+    let addTop = [];
+    addTop = new Array(this.words.length);
     for (let i = 0; i < addTop.length; i++) {
       addTop[i] = 0;
     }
@@ -139,7 +147,10 @@ class Game {
     // declare empty array for top array
     let topArray = [];
     topArray = plusTop;
+
+    //console.log(topArray)
     $(this.$divs).each(function (key, value) {
+      // console.log(`${$(value).text()}: ${topArray[key]}`)
       value.css("top", topArray[key] + "px");
       if (topArray[key] >= bottomLine) {
         $(this).remove();
@@ -148,9 +159,6 @@ class Game {
     });
   }
 }
-
-
-
 $(() => {
   // Cache the dom nodes
   const $sky = $(".container");
@@ -161,30 +169,34 @@ $(() => {
 
   // Create instance
   const newGame = new Game($sky);
+  var drawingStars = null;
+  var fallingStars = null;
 
   $submitNickNameBtn.on("click", (event) => {
     newGame.generatePlayer($nickNameValue.val()); // Genearate Player
-
+    console.log(newGame.data);
     $(".btn-group").hide();
     $(".playBtn-group").fadeIn("slow");
 
-    const plusTop = newGame.SetTop(); // Set words top default 0
-    // Down words
-    const down = () => {
-      newGame.down(plusTop);
-    };
     // Draw words on top of the page
     const draw = () => {
       newGame.draw();
       const maxIndex = newGame.words.length;
+
       if (maxIndex == newGame.count) {
         clearInterval(drawingStars); // if words are all drawn clear draw function.
       }
     };
-    const drawingStars = setInterval(draw, newGame.drawSpeed);
-    const fallingStars = setInterval(down, newGame.downSpeed);
-    drawingStars;
-    fallingStars;
+
+    const plusTop = newGame.SetTop(); // Set words top default 0
+    // Down words
+    const down = () => {
+      //console.log(plusTop)
+      newGame.down(plusTop);
+    };
+
+    drawingStars = setInterval(draw, newGame.drawSpeed);
+    fallingStars = setInterval(down, newGame.downSpeed);
   });
 
   // Quit button to reset
@@ -196,17 +208,18 @@ $(() => {
     for (let i = 0; i < newGame.data.length; i++) {
       newGame.data[i].isGameOn = false;
     }
-
-    $($eq).find(".star").remove();
-    console.log(newGame.data);
+    drawingStars = clearInterval(drawingStars)
+    fallingStars = clearInterval(fallingStars)
+    $sky.find(".star").remove();
+    newGame.$divs.length = 0; // empty $divs array
   });
 
-  console.log(newGame.data);
   $wordInput.on("keyup", (event) => {
     $(newGame.$divs).each(function (key, value) {
       let typed = $(event.target).val(); // typed value
 
       if (typed === value.text()) {
+        console.log(newGame.data)
         // if typed value is matching with falling words
         value.remove(); // remove falling word
         $(event.target).val(""); // set input value default empty
