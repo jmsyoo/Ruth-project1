@@ -46,6 +46,7 @@ class Game {
     this.level = null;
     this.data = [];
     this.startGame = false;
+    this.isGameOver = false;
     this.width = "150px";
     this.height = "30px";
     this.count = 0;
@@ -142,6 +143,10 @@ class Game {
     return addTop;
   }
   down(plusTop) {
+
+    // declare hit count
+    let hitCount = 0;
+
     // set height interval
     let downHeight = parseInt(this.height.replace("px", ""));
 
@@ -154,17 +159,36 @@ class Game {
     let topArray = [];
     topArray = plusTop;
 
-    //console.log(topArray)
+    const indexData = this.findNickName(this.nickName); // Get current player index
+
+    let $divKey = null;
+    let isHit = false;
+
     $(this.$divs).each(function (key, value) {
       // console.log(`${$(value).text()}: ${topArray[key]}`)
       value.css("top", topArray[key] + "px");
       if (topArray[key] >= bottomLine) {
-        $(this).remove();
+
+        $(this).remove(); // remove from screen
+        isHit = true; // set hit ture
+        $divKey = key; // assign $divs index key
       }
       topArray[key] += downHeight;
     });
+
+    if (isHit == true) {
+      this.$divs.splice($divKey, 1);
+      this.data[indexData].life --;
+      $("#playerLife").text(this.data[indexData].life);
+      console.log(this.data); // check data
+
+      if(this.data[indexData].life ==0){
+        this.isGameOver = true;
+      }    
+    }
   }
 }
+
 $(() => {
   // Cache the dom nodes
   const $sky = $(".container");
@@ -174,6 +198,7 @@ $(() => {
   const $quitBtn = $("#quitBtn");
   var totalScore = 0;
   var $playerScore = $("#playerScore");
+  var $tempArray = [];
 
   // Create instance
   const newGame = new Game($sky);
@@ -181,51 +206,137 @@ $(() => {
   var fallingStars = null;
 
   $submitNickNameBtn.on("click", (event) => {
-    newGame.generatePlayer($nickNameValue.val()); // Genearate Player
-    console.log(newGame.data);
+
+    // Generate Player
+    newGame.generatePlayer($nickNameValue.val());
+
+    // Nickname hide, play button show
     $(".btn-group").hide();
     $(".playBtn-group").fadeIn("slow");
 
-    // Draw words on top of the page
-    const draw = () => {
-      newGame.draw();
-      const maxIndex = newGame.words.length;
+    // Show player life
+    const life = newGame.data[newGame.findNickName(newGame.nickName)].life;
+    $("#playerLife").text(life);
 
-      if (maxIndex == newGame.count) {
-        // console.log(
-        //   `${index} :  ${name} : ${score} this Score : ${newGame.score}`
-        // );
-        clearInterval(drawingStars); // if words are all drawn clear draw function.
+    const drawingStar = setInterval(() => {
+      draw_();
+
+    }, newGame.drawSpeed);
+
+    drawingStar;
+
+  })
+  const draw_ = () => {
+    // create random left
+    let left = newGame.setLeftWidth();
+
+    // check if word is drew outside of container
+    if (left + 150 >= newGame.$eq.width()) {
+        left = (left - 150) + "px"; // if it's outside, deduct word div length
+      } else {
+        left + "px";
       }
-    };
 
-    const plusTop = newGame.SetTop(); // Set words top default 0
-    // Down words
-    const down = () => {
-      //console.log(plusTop)
-      newGame.down(plusTop);
-    };
+    const $div = $("<div>")
+      .addClass("star")
+      .css("width", newGame.width)
+      .css("height", newGame.height)
+      .css("position", "absolute")
+      .css("left", left)
+      .css("text-align", "center")
+      .text(newGame.words[newGame.count]);
+      
+    newGame.$divs.push($div); // Check this array!!! 
 
-    drawingStars = setInterval(draw, newGame.drawSpeed);
-    fallingStars = setInterval(down, newGame.downSpeed);
-  });
+    $div.appendTo(newGame.$eq);
+    newGame.count++;
+
+    console.log(newGame.data);
+  }
+
+
+
+
+
+  // $submitNickNameBtn.on("click", (event) => {
+  //   newGame.generatePlayer($nickNameValue.val()); // Genearate Player
+  //   $(".btn-group").hide();
+  //   $(".playBtn-group").fadeIn("slow");
+
+  //   const life = newGame.data[newGame.findNickName(newGame.nickName)].life;
+  //   $("#playerLife").text(life);
+  //   // Draw words on top of the page
+  //   const draw = () => {
+  //     newGame.draw();
+  //     const maxIndex = newGame.words.length;
+  //     if (maxIndex == newGame.count) {
+  //       clearInterval(drawingStars); // if words are all drawn clear draw function.
+  //     }
+  //   };
+  //   var plusTop = newGame.SetTop(); // Set words top default 0
+  //   // Down words
+  //   const down = () => {
+
+  //     if(newGame.isGameOver == true){
+  //       clearInterval(fallingStars);
+  //       console.log('Game over')
+  //     }
+  //     newGame.down(plusTop);
+  //   };
+    
+  //   newGame.words.map((item) => {
+  //     $tempArray.push(item);
+  //   });
+  //   console.log($tempArray);
+  
+  //   drawingStars = setInterval(draw, newGame.drawSpeed);
+  //   fallingStars = setInterval(down, newGame.downSpeed);
+  // });
 
   $wordInput.on("keyup", (event) => {
-    $(newGame.$divs).each(function (key, value) {
-      
+
+    $(newGame.$divs).each(function (key, value) {    
       let typed = $(event.target).val(); // typed value
       if (typed === value.text()) {
+
+        // newGame.$divs.splice(key,1);      
+        // console.log(newGame.$divs);
+
         totalScore = totalScore  + newGame.score;
         const index = newGame.findNickName(newGame.nickName);
-        newGame.data[index].score = totalScore;
-        console.log(newGame.data);
+        newGame.data[index].score = totalScore; // Score Update
         $playerScore.text(totalScore);
+
         // if typed value is matching with falling words
-        value.remove(); // remove falling word
+        value.remove(); // remove falling word from sky
+
+        // Level up function
+        completeLevel(typed);
+        
         $(event.target).val(""); // set input value default empty
       }
     });
   });
+
+  const completeLevel = (word) => {
+    const index = $tempArray
+      .map((item) => {
+        return item;
+      }).indexOf(word);
+
+    $tempArray.splice(index, 1);
+
+    const currentLength = $tempArray.length;
+    if (currentLength == 0) {
+      console.log(newGame.data);
+      const dataIndex = newGame.findNickName(newGame.nickName);
+      console.log(newGame.data[dataIndex].level)
+      newGame.data[dataIndex].level = newGame.data[dataIndex].level + 1; // level up
+      $wordInput.prop('disabled', true);
+      console.log(newGame.data);
+    }
+  };
+  
   // Quit button to reset
   $quitBtn.on("click", (event) => {
     $nickNameValue.val("");
@@ -245,9 +356,6 @@ $(() => {
 
 });
   
-
-  
-
 const data1 = [
   {name : "prod1"},{name : "prod2"},{name : "prod3"}
 ];
