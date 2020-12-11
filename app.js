@@ -143,7 +143,6 @@ class Game {
     return addTop;
   }
   down(plusTop) {
-
     // declare hit count
     let hitCount = 0;
 
@@ -182,7 +181,7 @@ class Game {
       $("#playerLife").text(this.data[indexData].life);
       console.log(this.data); // check data
 
-      if(this.data[indexData].life ==0){
+      if(this.data[indexData].life == 0){
         this.isGameOver = true;
       }    
     }
@@ -204,94 +203,43 @@ $(() => {
   const newGame = new Game($sky);
   var drawingStars = null;
   var fallingStars = null;
+  var wordArray = [];
 
+  
   $submitNickNameBtn.on("click", (event) => {
-
-    // Generate Player
-    newGame.generatePlayer($nickNameValue.val());
-
-    // Nickname hide, play button show
+    newGame.generatePlayer($nickNameValue.val()); // Genearate Player
     $(".btn-group").hide();
     $(".playBtn-group").fadeIn("slow");
 
-    // Show player life
     const life = newGame.data[newGame.findNickName(newGame.nickName)].life;
     $("#playerLife").text(life);
-
-    const drawingStar = setInterval(() => {
-      draw_();
-
-    }, newGame.drawSpeed);
-
-    drawingStar;
-
-  })
-  const draw_ = () => {
-    // create random left
-    let left = newGame.setLeftWidth();
-
-    // check if word is drew outside of container
-    if (left + 150 >= newGame.$eq.width()) {
-        left = (left - 150) + "px"; // if it's outside, deduct word div length
-      } else {
-        left + "px";
+    // Draw words on top of the page
+    const draw = () => {
+      newGame.draw();
+      const maxIndex = newGame.words.length;
+      if (maxIndex == newGame.count) {
+        clearInterval(drawingStars); // if words are all drawn clear draw function.
       }
+    };
+    var plusTop = newGame.SetTop(); // Set words top default 0
+    // Down words
+    const down = () => {
 
-    const $div = $("<div>")
-      .addClass("star")
-      .css("width", newGame.width)
-      .css("height", newGame.height)
-      .css("position", "absolute")
-      .css("left", left)
-      .css("text-align", "center")
-      .text(newGame.words[newGame.count]);
-      
-    newGame.$divs.push($div); // Check this array!!! 
-
-    $div.appendTo(newGame.$eq);
-    newGame.count++;
-
-    console.log(newGame.data);
-  }
-
-
-
-
-
-  // $submitNickNameBtn.on("click", (event) => {
-  //   newGame.generatePlayer($nickNameValue.val()); // Genearate Player
-  //   $(".btn-group").hide();
-  //   $(".playBtn-group").fadeIn("slow");
-
-  //   const life = newGame.data[newGame.findNickName(newGame.nickName)].life;
-  //   $("#playerLife").text(life);
-  //   // Draw words on top of the page
-  //   const draw = () => {
-  //     newGame.draw();
-  //     const maxIndex = newGame.words.length;
-  //     if (maxIndex == newGame.count) {
-  //       clearInterval(drawingStars); // if words are all drawn clear draw function.
-  //     }
-  //   };
-  //   var plusTop = newGame.SetTop(); // Set words top default 0
-  //   // Down words
-  //   const down = () => {
-
-  //     if(newGame.isGameOver == true){
-  //       clearInterval(fallingStars);
-  //       console.log('Game over')
-  //     }
-  //     newGame.down(plusTop);
-  //   };
+      if(newGame.isGameOver == true){
+        clearInterval(fallingStars);
+        console.log('Game over')
+      }
+      newGame.down(plusTop);
+    };
     
-  //   newGame.words.map((item) => {
-  //     $tempArray.push(item);
-  //   });
-  //   console.log($tempArray);
+    newGame.words.map((item) => {
+      $tempArray.push(item);
+    });
+    console.log($tempArray);
   
-  //   drawingStars = setInterval(draw, newGame.drawSpeed);
-  //   fallingStars = setInterval(down, newGame.downSpeed);
-  // });
+    drawingStars = setInterval(draw, newGame.drawSpeed);
+    fallingStars = setInterval(down, newGame.downSpeed);
+  });
 
   $wordInput.on("keyup", (event) => {
 
@@ -356,24 +304,3 @@ $(() => {
 
 });
   
-const data1 = [
-  {name : "prod1"},{name : "prod2"},{name : "prod3"}
-];
-
-const data2 = [
-  {name : "prod1", color: "red", onhand : 1},
-  {name : "prod1", color: "green", onhand : 2},
-  {name : "prod1", color: "blue", onhand : 3},
-
-  {name : "prod2", color: "red", onhand : 1},
-  {name : "prod2", color: "green", onhand : 2},
-  {name : "prod2", color: "blue", onhand : 3},
-
-  {name : "prod3", color: "red", onhand : 1},
-  {name : "prod3", color: "green", onhand : 2},
-  {name : "prod3", color: "blue", onhand : 3},
-];
-
-const data3 = [
-  {name : "prod1", color : ["red","green","blue"], onhand : [1,2,3] }
-]

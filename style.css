@@ -85,7 +85,7 @@ body {
 .board #life{
     float: left;
     color: var(--star);
-    font-size: 4rem;
+    font-size: 5rem;
     width: 20%;
     height: 20%;
     margin: 1%;
@@ -130,11 +130,12 @@ input{
     border: none;
 }
 
-#nickName{
+#nickName, #wordInput{
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
     width: 30rem;
 }
+
 .btn-group{
     margin-top: 10rem;
     display: flex;
@@ -159,10 +160,17 @@ input{
     border-bottom-right-radius: 3px;
     border: none;
 }
-#wordInput{
+#startBtn {
+    height: 35px;
+    padding: 1%;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border: none;
+}
+/* #wordInput{
     border-radius: 3px;
     width: 30rem;
-}
+} */
 #quitBtn{
     float: right;
     height: 50px;
