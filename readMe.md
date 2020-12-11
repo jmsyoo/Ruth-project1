@@ -18,7 +18,7 @@ This game aims to help people to improve their keyboard typing skills while havi
 1. Overall Design
 2. HTML wire frame
 3. CSS
-4. JavaScript
+4. Add JavaScript
 
 ### Streach Goals
  1. Use random words generate API

@@ -89,6 +89,8 @@ class Game {
     this.currentPlayerIndex = index;
   }
   setWords(nickName) {
+
+    this.words.length = 0;
     // Find words based on current player's level
     if (this.startGame == true) {
       // Check if game is on
@@ -106,11 +108,11 @@ class Game {
       this.downSpeed = words.data[level - 1].downSpeed; // star falling speed found
       this.score = words.data[level - 1].point; // current level word point found
 
-      /////// this is for level != 1 (I am going to fix this later)
+      /////// If player's level is 1 then return word array when generating player.(I am going to fix this later)
       if (level == 1) {
         return (this.words = this.shuffle(words.data[level - 1].words));
       } else {
-        this.shuffle(words.data[level - 1].words); // return words for current player
+        this.words = this.shuffle(words.data[level - 1].words); // directly assign words for current player
       }
       ///////////////////////////////
     }
