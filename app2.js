@@ -58,8 +58,8 @@ class Game {
     this.currentPlayerIndex = null;
   }
   generatePlayer(nickName) {
-    this.words.length = 0; // reset array
-    this.count = 0; // reset count
+    this.words.length = 0; // reset words array when generating new player
+    this.count = 0; // reset word count to 0
 
     const newPlayer = new Player(nickName, this.level);
     this.startGame = true;
@@ -68,14 +68,15 @@ class Game {
     newPlayer.life = 5;
     this.data.push(newPlayer);
 
-    // Find isGameOn Nickname // Replace this with function later!!!!!!!!!!
+    // Set current game's nickname property
     const findName = this.data.map((item) => {
       if (item.isGameOn == true) {
         this.nickName = item.nickName;
       }
     });
     findName;
-    this.words = this.setWords(this.nickName);
+
+    this.words = this.setWords(this.nickName); // Assign words for current player
   }
   findNickName(nickName) {
     const index = this.data
@@ -88,25 +89,38 @@ class Game {
     this.currentPlayerIndex = index;
   }
   setWords(nickName) {
+    // Find words based on current player's level
     if (this.startGame == true) {
-      const words = new Words();
+      // Check if game is on
+      const words = new Words(); // create word instance from word class
 
       const index = this.data
         .map((item) => {
           return item.nickName;
-        }).indexOf(nickName);
+        })
+        .indexOf(nickName); // Get current player's index in object of array data.
 
-      const level = this.data[index].level;
-      this.drawSpeed = words.data[level - 1].drawSpeed;
-      this.downSpeed = words.data[level - 1].downSpeed;
-      this.score = words.data[level - 1].point;
-      return this.shuffle(words.data[level - 1].words); // return words
+      const level = this.data[index].level; // current level
+      console.log(`current level: ${level}`) // checking current level
+      this.drawSpeed = words.data[level - 1].drawSpeed; // star drawing speed found
+      this.downSpeed = words.data[level - 1].downSpeed; // star falling speed found
+      this.score = words.data[level - 1].point; // current level word point found
+
+      /////// this is for level != 1 (I am going to fix this later)
+      if (level == 1) {
+        return (this.words = this.shuffle(words.data[level - 1].words));
+      } else {
+        this.shuffle(words.data[level - 1].words); // return words for current player
+      }
+      ///////////////////////////////
     }
   }
-  shuffle(array) { // Fisher-Yates Shuffle 
-    var currentIndex = array.length, temporaryValue, randomIndex;
+  //////// Below code is not mine. Fisher-Yates Shuffle (This works better than mine.)
+  shuffle(array) {
+    var currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
     while (0 !== currentIndex) {
-
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
 
@@ -114,9 +128,9 @@ class Game {
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-  
     return array;
   }
+  ///////////////////////////////////////////////////////////////////////////////////
   setLeftWidth() {
     let body = $("body").width(); // Get body width
     let container = $(this.$eq).width(); // Get container width
@@ -126,30 +140,32 @@ class Game {
     return randomLeft + extraLeft;
   }
   draw() {
-    let left = this.setLeftWidth();
+    let left = this.setLeftWidth(); // Genearate random left
 
-    // check if word is drew outside of container
+    // check if star is drew outside of container
     if (left + 150 >= this.$eq.width()) {
       left = left - 150 + "px"; // if it's outside, deduct word div length
     } else {
       left + "px";
     }
 
+    // Create div for star
     const $div = $("<div>")
       .addClass("star")
       .css("width", this.width)
       .css("height", this.height)
       .css("position", "absolute")
-      .css("left", left)
+      .css("left", left) // assign left
       .css("text-align", "center")
       .text(this.words[this.count]);
 
     //console.log(this.words[this.count]) // Check words are drawing ok.
-    this.$wordsDivs.push($div);
-    $div.appendTo(this.$eq);
+    this.$wordsDivs.push($div); // push stars inside div array
+    $div.appendTo(this.$eq); // draw star in the sky one by one
     this.count++;
   }
   SetTop() {
+    // This function create array for reseting each star div's top to 0. Each element will be designated to start div top.
     let addTop = [];
     addTop = new Array(this.words.length);
     for (let i = 0; i < addTop.length; i++) {
@@ -162,21 +178,23 @@ class Game {
 // Cache the dom nodes
 $(() => {
   const $sky = $(".container");
-  const $wordInput = $("#wordInput");
-  const $submitNickNameBtn = $("#submitNickName");
-  const $nickName = $("#nickName");
-  const $startBtn = $("#startBtn");
-  const $quitBtn = $("#quitBtn");
-  const $instBtn = $("#instBtn");
-  const $closeBtn = $("#close");
+  const $nickName = $("#nickName"); // nick name input
+  const $submitNickNameBtn = $("#submitNickName"); // submit nickname button
+  const $wordInput = $("#wordInput"); // word input
+  const $startBtn = $("#startBtn"); // start button
+  const $quitBtn = $("#quitBtn"); // quit game button
+  const $instBtn = $("#instBtn"); // open instruction modal button
+  const $closeBtn = $("#close"); // close instructon modal button
+  // Global variables
   var $playerLife = $("#playerLife");
+  var $playerLevel = $("#playerLevel");
   var totalScore = 0;
   var $playerScore = $("#playerScore");
   var drawingStars = null;
   var fallingStars = null;
   var tempArray = [];
   var plusTop = null;
-
+  var flashing = null;
   // Create Instance
   const game = new Game($sky);
 
@@ -261,28 +279,39 @@ $closeBtn.on('click',closeModal);
   const down = () => {
     downWords(plusTop);
   };
+  const flashingButton = () => {
+    $startBtn.fadeOut(500).fadeIn(500).on("click", (event) => {
+        clearInterval(flashing);
+        $(event.target).prop("disabled",true).removeClass('buttonAble').addClass("buttonDsiable")
+    })
+  };
 
   // Event Listiner
   $submitNickNameBtn.on("click", (event) => {
-    game.generatePlayer($nickName.val()); // Generate player functin confirmed.
+    if($nickName.val()!= ''){
+        game.generatePlayer($nickName.val()); // Generate player functin confirmed.
+    
     // Play button to show.
     $(".btn-group").hide();
     $(".playBtn-group").fadeIn("slow");
 
-     const flashingStartButton = setInterval(() => {
-        $startBtn.fadeOut(500).fadeIn(500).on("click", (event) => {
-            clearInterval(flashingStartButton);
-            $(event.target).prop("disabled",true).removeClass('buttonAble').addClass("buttonDsiable")
-        })
+    // Letting plyer knows where to click for starting the game.
+    flashing = setInterval(() => {
+        flashingButton();
      }, 1000);
-     
+    }else{
+        alert('Please write your nickname');
+    }  
   });
   $startBtn.on("click", (event) => {
-    game.findNickName(game.nickName); // set current player index for data array
-    console.log(game.data) // Checking current user
-    $playerLife.text(game.data[game.currentPlayerIndex].life);
+    game.findNickName(game.nickName); // find current player index for data array
 
-    plusTop = game.SetTop(); // Set words top default 0
+    //console.log(game.data) // Checking current user
+
+    $playerLife.text(game.data[game.currentPlayerIndex].life); // Display player life
+    $playerLevel.text(game.data[game.currentPlayerIndex].level); // Display player level
+
+    plusTop = game.SetTop(); // Set falling star top default 0
 
     drawingStars = setInterval(draw, game.drawSpeed);
     fallingStars = setInterval(down, game.downSpeed);
@@ -295,7 +324,8 @@ $closeBtn.on('click',closeModal);
       let inputValue = $(event.target).val();
       // if so start looping stars to check if typed word is matching.
       $(game.$wordsDivs).each(function (key, value) {
-        console.log(`${inputValue} : ${value.text()} ${currentStarCount}`);
+
+        // console.log(`${inputValue} : ${value.text()} ${currentStarCount}`);
         if (inputValue === value.text()) {
           totalScore = totalScore + game.score;
           game.data[game.currentPlayerIndex].score = totalScore;
@@ -306,45 +336,40 @@ $closeBtn.on('click',closeModal);
           game.$wordsDivs[key].remove(); // remove falling word from sky
           plusTop[key] = -10000;
 
-          // Level up function
-          // completeLevel(typed);
+          $(event.target).val(""); // set input value default empty       
+        }
 
-          $(event.target).val(""); // set input value default empty
+        console.log(`words: ${$(game.words).length}`)
 
-          if (game.words.length == game.$wordsDivs.length) {
-            if ($(".star").length === 0) {
-            //   alert("clear");
-              clearInterval(fallingStars);
+          if ($playerLife.text() != 0) { // life is not 0
+            if ($(".star").length === 0) { // no stars in the sky
+
+              alert("You cleared level");
+              clearInterval(fallingStars); // clear falling star          
+              clearInterval(drawingStars); // clear drawing star function
+             game.data[game.currentPlayerIndex].level ++; // level up
+             $playerLevel.text(game.data[game.currentPlayerIndex].level); // display player's current level
+
+             // Start button flashing
+             flashing = setInterval(() => {
+                flashingButton();
+             }, 1000);
+             $startBtn.prop("disabled", false);
+             game.setWords(game.nickName); // Set word for current level
+             console.log(game.data); // Checking data
+             console.log(game.words);
+             
             }
           }
-        }
       });
     }
   });
-
-  // Level up condition Not yet
-  const winCondition = (word) => {
-    const index = $tempArray
-      .map((item) => {
-        return item;
-      }).indexOf(word);
-
-    $tempArray.splice(index, 1);
-
-    const currentLength = $tempArray.length;
-    if (currentLength == 0) {
-      const dataIndex = game.findNickName(game.nickName);
-      game.data[dataIndex].level = game.data[dataIndex].level + 1; // level up
-      $wordInput.prop('disabled', true);
-      console.log(game.data);
-    }
-  };
-  
-  // Quit button to reset
+  // Quit button to stop the game
   $quitBtn.on("click", (event) => {
-    clearInterval(fallingStars);
-    clearInterval(drawingStars);
+    clearInterval(fallingStars); // clear fallin star function
+    clearInterval(drawingStars); // clear drawing star function
 
+    // start button ables to click
     $startBtn.removeClass("buttonDsiable").addClass("buttonAble")
 
     $(".playBtn-group").hide("slow");
@@ -364,5 +389,6 @@ $closeBtn.on('click',closeModal);
     $playerScore.text('');
     $startBtn.prop("disabled",false);
     $playerLife.text('');
+    $playerLevel.text('');
   });
 });
