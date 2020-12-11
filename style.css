@@ -38,6 +38,10 @@ body {
 button{
     cursor: pointer;
 }
+p{
+    font-size: 3rem;
+    color: var(--ground);
+}
 .container {
     width: 900px;
     height: 100vh;
@@ -85,13 +89,34 @@ button{
     /* display: flex;
     justify-content: space-around; */
 }
+.row1{
+    width: 100%;
+    height: 30%;
+    margin: 1%;
+    padding: 1%;
+}
+.row2{
+    width: 100%;
+    height: 20%;
+    margin: 1%;
+    padding: 1%;
+}
 .board #life{
     float: left;
     color: var(--star);
     font-size: 8rem;
     width: 20%;
     height: 20%;
+    margin: 1%; 
+}
+.board #level{
+    float: left;
+    color: var(--star);
+    font-size: 5rem;
+    width: 20%;
+    height: 20%;
     margin: 1%;
+    display: block;
     
 }
 .board .sun{
@@ -109,7 +134,9 @@ button{
     height:170px;
     /* display:inline-block; */
     background-color: var(--moon);
-    margin:2%;
+    /* margin:2%; */
+    margin-top: 0;
+    margin-right: 5%;
     text-align:center;
     border-radius:50%;
     float: right;
@@ -122,6 +149,9 @@ button{
 .star{
     color: var(--star);
     font-size: 3rem;
+}
+button{
+    /* color: var(--star); */
 }
 input{
     height: 35px;
@@ -177,7 +207,7 @@ input{
     border: none;
     width: 50px;
     background-color: var(--green);
-    color: var(--white);
+    /* color: var(--white); */
 }
 #quitBtn{
     float: right;
@@ -190,3 +220,49 @@ input{
     background-color: var(--red);
     color: var(--white);
 }
+#modal{
+    position: fixed;
+    top: 0;
+    left: 5;
+    width: 900px;
+    height: 100%;
+    background-color:  var(--sky);
+    z-index: 1;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+#modal-textbox{
+    background-color: var(--white);
+    border-radius: 5px;
+	height: 350px;
+	width: 550px;
+	margin: 15px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+#instBtn{
+    width: 5rem;
+    height: 5rem;
+    float: right;
+    border: none;
+    border-radius: 50%;
+    background-color: #fdb813;
+    margin: 5px 0 0 5px;
+    cursor: pointer;
+    color: var(--white);
+    font-size: 2rem;
+}
+#close{
+    font-size: 4rem;
+    cursor: pointer;
+    color: var(--sky);
+}
+.buttonDisable{
+    color:gray;
+}
+.buttonAble{
+    color: var(--star);
+}
+

@@ -6,24 +6,44 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
-    <!-- <script src="app.js" defer></script> -->
+    <!-- <script src="app_prv.js" defer></script> -->
     <script src="app2.js" defer></script>
     
-    <title>Typing War</title>
+    <title>Starfall</title>
 </head>
 <body>
     <div class="container">
-        <div class="board">
-            <div id="life">
-                <span>Life:&nbsp;</span><span id="playerLife"></span>
+        <button id="instBtn" type="button">Inst</button>
+        <div id="modal">
+            <div id="modal-textbox">
+                <a id="close" href="#" style="float: left;">Close</a>
+                <p>
+                    This game aims to help people to improve their keyboard typing skills while having fun.</br></br>
+                    Enjoy~ 
+                </p>
             </div>
+        </div>
+        <div class="board">
+            <div class="row1">
+                <div id="life">
+                    <span>Life:&nbsp;</span><span id="playerLife"></span>
+                </div>
+                <div id="playerScore" class="moon">
+                    <!-- Player Score -->
+                    0
+                </div>
+            </div>
+            <div class="row2">
+                <div id="level">
+                    <span>Level:&nbsp;</span><span id="playerLevel"></span>
+                </div>
+            </div>
+            
+            
             <!-- <div id="worldRecord" class="sun">
                 World Record
             </div> -->
-            <div id="playerScore" class="moon">
-                <!-- Player Score -->
-                0
-            </div>
+            
 
         </div>
 
@@ -40,7 +60,7 @@
                     <input id="wordInput" type="text" placeholder="Type word here">
                     <!-- <button id="nextRoundBtn">START</button> -->
                     <button id="quitBtn">QUIT</button>
-                    <button id="startBtn">START</button> 
+                    <button id="startBtn" class="buttonAble">START</button> 
                          
                 </div>            
             </div>

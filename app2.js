@@ -21,8 +21,9 @@ class Words {
           "ajax",
           "json",
           "var",
-          "for",
+          "each",
           "while",
+          "substring"
         ],
         drawSpeed: 2000,
         downSpeed: 1000,
@@ -30,7 +31,7 @@ class Words {
       },
       {
         level: 2,
-        words: ["public", "protected", "private", "property", "abstract"],
+        words: ["public", "protected", "private", "property", "abstract", "string","int","decimal"],
         drawSpeed: 1000,
         downSpeed: 500,
         point: 200,
@@ -104,15 +105,11 @@ class Game {
   }
   shuffle(array) { // Fisher-Yates Shuffle 
     var currentIndex = array.length, temporaryValue, randomIndex;
-  
-    // While there remain elements to shuffle...
     while (0 !== currentIndex) {
-  
-      // Pick a remaining element...
+
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
-  
-      // And swap it with the current element.
+
       temporaryValue = array[currentIndex];
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
@@ -164,12 +161,14 @@ class Game {
 
 // Cache the dom nodes
 $(() => {
-  const $sky = $(".container"); // content for putting words
+  const $sky = $(".container");
   const $wordInput = $("#wordInput");
   const $submitNickNameBtn = $("#submitNickName");
   const $nickName = $("#nickName");
   const $startBtn = $("#startBtn");
   const $quitBtn = $("#quitBtn");
+  const $instBtn = $("#instBtn");
+  const $closeBtn = $("#close");
   var $playerLife = $("#playerLife");
   var totalScore = 0;
   var $playerScore = $("#playerScore");
@@ -178,10 +177,19 @@ $(() => {
   var tempArray = [];
   var plusTop = null;
 
+  // Create Instance
   const game = new Game($sky);
-  // Event Listiner
 
-  // Drawing stars
+  const openModal = () => {
+    $("#modal").css("display","flex");
+}
+const closeModal = () => {
+    $("#modal").css("display",'none');
+}
+$instBtn.on('click',openModal)
+$closeBtn.on('click',closeModal);
+
+ // Event Handler
   const draw = () => {
     game.draw();
     const maxIndex = game.words.length;
@@ -216,11 +224,14 @@ $(() => {
           console.log(game.words[i] + ' : '+ topArray[i] + ':' + bottomLine);
 
           // This line of code!!!!!!!!! 
-          game.$wordsDivs[i].remove(); // remove from container // this code works only disapearing star from container div and still running behind.
-          //so it keeps deducting player life eventhough star is landed on the ground.
+          game.$wordsDivs[i].remove(); 
+          // This remove the star from container 
+          // This code works only disapearing star from container div and still running behind.
+          // so it keeps deducting player's life eventhough star is landed on the ground.
 
           // In order to solve the problem, I have to go around.(Not sure this is the right way but it made works)
           // Add words to temp array
+
           ////////////////////////////////////////////////////
           if(!tempArray.includes(game.words[i])){ // remove duplicated star
 
@@ -251,6 +262,7 @@ $(() => {
     downWords(plusTop);
   };
 
+  // Event Listiner
   $submitNickNameBtn.on("click", (event) => {
     game.generatePlayer($nickName.val()); // Generate player functin confirmed.
     // Play button to show.
@@ -260,7 +272,7 @@ $(() => {
      const flashingStartButton = setInterval(() => {
         $startBtn.fadeOut(500).fadeIn(500).on("click", (event) => {
             clearInterval(flashingStartButton);
-            $(event.target).prop("disabled",true);
+            $(event.target).prop("disabled",true).removeClass('buttonAble').addClass("buttonDsiable")
         })
      }, 1000);
      
@@ -333,6 +345,8 @@ $(() => {
     clearInterval(fallingStars);
     clearInterval(drawingStars);
 
+    $startBtn.removeClass("buttonDsiable").addClass("buttonAble")
+
     $(".playBtn-group").hide("slow");
     $(".btn-group").show("slow");
 
@@ -349,5 +363,6 @@ $(() => {
     totalScore = 0;
     $playerScore.text('');
     $startBtn.prop("disabled",false);
+    $playerLife.text('');
   });
 });

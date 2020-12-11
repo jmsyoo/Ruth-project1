@@ -1,4 +1,4 @@
-App Title: Star fall
+# App Title: Starfall
 
 [App Demo](https://jmsyoo.github.io/Ruth-project1/)
 
@@ -20,7 +20,9 @@ This game aims to help people to improve their keyboard typing skills while havi
 3. CSS
 4. JavaScript
 
-### Streach goals
+### Streach Goals
  1. Use random words generate API
- 2. Level up
+ 2. Star fallin diagonally when user level up
  3. Score Board
+ 4. Change shape of word div to star
+ 5. Add animation when user typed correctly
