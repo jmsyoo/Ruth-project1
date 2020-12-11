@@ -67,7 +67,7 @@ class Game {
     newPlayer.life = 5;
     this.data.push(newPlayer);
 
-    // Find isOnGame Nickname // Replace with function later!!!!!!!!!!
+    // Find isGameOn Nickname // Replace this with function later!!!!!!!!!!
     const findName = this.data.map((item) => {
       if (item.isGameOn == true) {
         this.nickName = item.nickName;
@@ -99,8 +99,26 @@ class Game {
       this.drawSpeed = words.data[level - 1].drawSpeed;
       this.downSpeed = words.data[level - 1].downSpeed;
       this.score = words.data[level - 1].point;
-      return words.data[level - 1].words; // return words
+      return this.shuffle(words.data[level - 1].words); // return words
     }
+  }
+  shuffle(array) { // Fisher-Yates Shuffle 
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
   }
   setLeftWidth() {
     let body = $("body").width(); // Get body width
@@ -159,7 +177,6 @@ $(() => {
   var fallingStars = null;
   var tempArray = [];
   var plusTop = null;
-  var typedTempArray = [];
 
   const game = new Game($sky);
   // Event Listiner
@@ -170,12 +187,9 @@ $(() => {
     const maxIndex = game.words.length;
 
     if (maxIndex == game.count) {
-      clearInterval(drawingStars); // if words are all drawn clear draw function.
-      // alert("clear draw");
+      clearInterval(drawingStars); // if words are all drawn, clear draw function.
     }
   };
-  // Reseting top array to 0
-
   const downWords = (plusTop) => {
     
     // declare empty array for top array
@@ -203,7 +217,7 @@ $(() => {
 
           // This line of code!!!!!!!!! 
           game.$wordsDivs[i].remove(); // remove from container // this code works only disapearing star from container div and still running behind.
-          //so it keeps deducting player life eventhough star was fell on the ground.
+          //so it keeps deducting player life eventhough star is landed on the ground.
 
           // In order to solve the problem, I have to go around.(Not sure this is the right way but it made works)
           // Add words to temp array
@@ -225,7 +239,7 @@ $(() => {
 
           if (game.words.length == game.$wordsDivs.length) {
             if ($(".star").length === 0) {
-              alert("clear");
+            //   alert("clear");
               clearInterval(fallingStars);
             }
           }
@@ -234,9 +248,6 @@ $(() => {
     }
   };
   const down = () => {
-    // game.words.map((item) => {
-    //     $tempArray.push(item);
-    //   });
     downWords(plusTop);
   };
 
@@ -246,10 +257,17 @@ $(() => {
     $(".btn-group").hide();
     $(".playBtn-group").fadeIn("slow");
 
-    //console.log(game.words); // Words array confirmed.
+     const flashingStartButton = setInterval(() => {
+        $startBtn.fadeOut(500).fadeIn(500).on("click", (event) => {
+            clearInterval(flashingStartButton);
+            $(event.target).prop("disabled",true);
+        })
+     }, 1000);
+     
   });
   $startBtn.on("click", (event) => {
     game.findNickName(game.nickName); // set current player index for data array
+    console.log(game.data) // Checking current user
     $playerLife.text(game.data[game.currentPlayerIndex].life);
 
     plusTop = game.SetTop(); // Set words top default 0
@@ -274,7 +292,7 @@ $(() => {
           // if typed value is matching with falling words
           console.log(game.$wordsDivs[key].text());
           game.$wordsDivs[key].remove(); // remove falling word from sky
-          plusTop[key] = -1000;
+          plusTop[key] = -10000;
 
           // Level up function
           // completeLevel(typed);
@@ -283,7 +301,7 @@ $(() => {
 
           if (game.words.length == game.$wordsDivs.length) {
             if ($(".star").length === 0) {
-              alert("clear");
+            //   alert("clear");
               clearInterval(fallingStars);
             }
           }
@@ -292,6 +310,7 @@ $(() => {
     }
   });
 
+  // Level up condition Not yet
   const winCondition = (word) => {
     const index = $tempArray
       .map((item) => {
@@ -302,12 +321,10 @@ $(() => {
 
     const currentLength = $tempArray.length;
     if (currentLength == 0) {
-      console.log(newGame.data);
-      const dataIndex = newGame.findNickName(newGame.nickName);
-      console.log(newGame.data[dataIndex].level)
-      newGame.data[dataIndex].level = newGame.data[dataIndex].level + 1; // level up
+      const dataIndex = game.findNickName(game.nickName);
+      game.data[dataIndex].level = game.data[dataIndex].level + 1; // level up
       $wordInput.prop('disabled', true);
-      console.log(newGame.data);
+      console.log(game.data);
     }
   };
   
@@ -315,5 +332,22 @@ $(() => {
   $quitBtn.on("click", (event) => {
     clearInterval(fallingStars);
     clearInterval(drawingStars);
+
+    $(".playBtn-group").hide("slow");
+    $(".btn-group").show("slow");
+
+    $nickName.val("");
+    for (let i = 0; i < game.data.length; i++) {
+      game.data[i].isGameOn = false;
+    }
+
+    game.isGameOn = false;
+    game.words.length = 0;
+    game.$wordsDivs.length = 0;
+    $(".star").remove();
+    game.SetTop();
+    totalScore = 0;
+    $playerScore.text('');
+    $startBtn.prop("disabled",false);
   });
 });

@@ -35,6 +35,9 @@ body {
     justify-content: center;
     align-items: center;
 }
+button{
+    cursor: pointer;
+}
 .container {
     width: 900px;
     height: 100vh;
@@ -85,7 +88,7 @@ body {
 .board #life{
     float: left;
     color: var(--star);
-    font-size: 5rem;
+    font-size: 8rem;
     width: 20%;
     height: 20%;
     margin: 1%;
@@ -130,10 +133,15 @@ input{
     border: none;
 }
 
-#nickName, #wordInput{
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+#nickName{
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
     width: 30rem;
+}
+#wordInput{
+    border-radius: 0.5rem;
+    width: 50%;
+    margin-top: 1rem;
 }
 
 .btn-group{
@@ -156,21 +164,21 @@ input{
 #submitNickName{
     height: 35px;
     padding: 1%;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
     border: none;
 }
 #startBtn {
-    height: 35px;
+    float: right;
+    height: 50px;
     padding: 1%;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-radius: 50%;
+    margin-right: 2rem;
     border: none;
+    width: 50px;
+    background-color: var(--green);
+    color: var(--white);
 }
-/* #wordInput{
-    border-radius: 3px;
-    width: 30rem;
-} */
 #quitBtn{
     float: right;
     height: 50px;
