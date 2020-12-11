@@ -9,9 +9,9 @@ class Player {
 }
 class Words {
   constructor() {
-    this.data = [
+    this.data = [ //DB
       {
-        level: 1,
+        level: 1, // javascript
         words: [
           "let",
           "length",
@@ -23,15 +23,26 @@ class Words {
           "var",
           "each",
           "while",
-          "substring"
+          "substring",
         ],
         drawSpeed: 2000,
         downSpeed: 1000,
         point: 100,
       },
       {
-        level: 2,
-        words: ["public", "protected", "private", "property", "abstract", "string","int","decimal"],
+        level: 2, // C#
+        words: [
+          "public",
+          "protected",
+          "private",
+          "property",
+          "abstract",
+          "decimal",
+          "internal",
+          "interface",
+          "linq",
+          "delegate"
+        ],
         drawSpeed: 1000,
         downSpeed: 500,
         point: 200,
@@ -43,7 +54,7 @@ class Game {
   constructor($eq) {
     this.nickName = null;
     this.level = null;
-    this.data = [];
+    this.data = []; //DB
     this.startGame = false;
     this.isGameOver = false;
     this.width = "200px";
@@ -224,7 +235,6 @@ $closeBtn.on('click',closeModal);
     let topArray = [];
     topArray = plusTop;
 
-
     let life = $playerLife.text();
 
     // set height interval
@@ -308,8 +318,6 @@ $closeBtn.on('click',closeModal);
   $startBtn.on("click", (event) => {
     game.findNickName(game.nickName); // find current player index for data array
 
-    //console.log(game.data) // Checking current user
-
     $playerLife.text(game.data[game.currentPlayerIndex].life); // Display player life
     $playerLevel.text(game.data[game.currentPlayerIndex].level); // Display player level
 
@@ -327,26 +335,26 @@ $closeBtn.on('click',closeModal);
       // if so start looping stars to check if typed word is matching.
       $(game.$wordsDivs).each(function (key, value) {
 
-        // console.log(`${inputValue} : ${value.text()} ${currentStarCount}`);
         if (inputValue === value.text()) {
           totalScore = totalScore + game.score;
           game.data[game.currentPlayerIndex].score = totalScore;
           $playerScore.text(totalScore);
 
           // if typed value is matching with falling words
-          console.log(game.$wordsDivs[key].text());
           game.$wordsDivs[key].remove(); // remove falling word from sky
           plusTop[key] = -10000;
 
           $(event.target).val(""); // set input value default empty       
         }
 
-        console.log(`words: ${$(game.words).length}`)
-
+        // Below code is winning condition
           if ($playerLife.text() != 0) { // life is not 0
-            if ($(".star").length === 0) { // no stars in the sky
+            if ($(".star").length === 0 && game.$wordsDivs.length == 0) { // no stars in the sky // !!!!!!!!!!!!!!! This line of code need to be fixed
 
+              //Win Alert. Going to add display pop up when clear the level
               alert("You cleared level");
+              //
+
               clearInterval(fallingStars); // clear falling star          
               clearInterval(drawingStars); // clear drawing star function
              game.data[game.currentPlayerIndex].level ++; // level up
@@ -358,11 +366,11 @@ $closeBtn.on('click',closeModal);
              }, 1000);
              $startBtn.prop("disabled", false);
              game.setWords(game.nickName); // Set word for current level
-             console.log(game.data); // Checking data
-             console.log(game.words);
-             
+            //  console.log(game.data); // Checking data
+            //  console.log(game.words);             
             }
           }
+        //////////////////////////////////
       });
     }
   });
