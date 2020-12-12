@@ -23,7 +23,7 @@ class Words {
           "var",
           "each",
           "while",
-          "substring",
+          "substring"
         ],
         drawSpeed: 2000,
         downSpeed: 1000,
@@ -45,7 +45,7 @@ class Words {
         ],
         drawSpeed: 1000,
         downSpeed: 500,
-        point: 200,
+        point: 100,
       },
     ];
   }
@@ -124,6 +124,7 @@ class Game {
         return (this.words = this.shuffle(words.data[level - 1].words));
       } else {
         this.words = this.shuffle(words.data[level - 1].words); // directly assign words for current player
+        console.log(this.words);
       }
       ///////////////////////////////
     }
@@ -292,6 +293,7 @@ $(() => {
           // 2. push word name into tempArray if's it's not duplicated whenever star hit groud.
           // 3. Keep doing until tempArray length is same as player's life.
 
+          console.log(tempArray)
           ////////////////////////////////////////////////////
           if(!tempArray.includes(game.words[i])){ // remove duplicated star
 
@@ -304,6 +306,7 @@ $(() => {
 
               if(tempArray.length == 5){ // So if temparray length becomes 5 stops the falling star. I will callback function here.
                   clearInterval(fallingStars);
+                  $wordInput.prop("disabled", true);
               }
           }
           /////////////////////////////////////////////////////
@@ -312,6 +315,8 @@ $(() => {
             if ($(".star").length === 0) {
             //   alert("clear");
               clearInterval(fallingStars);
+              clearInterval(drawingStars);
+              winngingCondition();
             }
           }
         }
@@ -347,6 +352,7 @@ $(() => {
   });
   $startBtn.on("click", (event) => {
     game.findNickName(game.nickName); // find current player index for data array
+    $wordInput.prop("disabled", false);
 
     $playerLife.text(game.data[game.currentPlayerIndex].life); // Display player life
     $playerLevel.text(game.data[game.currentPlayerIndex].level); // Display player level
@@ -376,39 +382,43 @@ $(() => {
           plusTop[key] = -10000; // This line of code need to be replaced with something else.
 
           $(event.target).val(""); // set input value default empty
-          
-          // Below code is winning condition
-          if ($playerLife.text() != 0) { // life is not 0
-             let totalWordCount = wordInputArr.length + tempArray.length;
-            if ($(".star").length === 0 && totalWordCount == game.words.length) { 
-             // I don't like this winning condition. No time to fix. ㅠ.ㅠ
 
-              //Win Alert. Going to add display pop up when clear the level
-              alert("You cleared level");
-              //
-
-              clearInterval(fallingStars); // clear falling star          
-              clearInterval(drawingStars); // clear drawing star function
-             game.data[game.currentPlayerIndex].level ++; // level up
-             $playerLevel.text(game.data[game.currentPlayerIndex].level); // display player's current level
-
-             // Start button flashing
-             flashing = setInterval(() => {
-                flashingButton();
-             }, 1000);
-             $startBtn.prop("disabled", false);
-             game.setWords(game.nickName); // Set word for current level
-            //  console.log(game.data); // Checking data
-            //  console.log(game.words);             
-            }
-          }
-        //////////////////////////////////
+        winngingCondition();
         }
 
         
       });
     }
   });
+
+  const winngingCondition = () => {
+    // Below code is winning condition
+    if ($playerLife.text() != 0) { // life is not 0
+      let totalWordCount = wordInputArr.length + tempArray.length;
+     if ($(".star").length === 0 && totalWordCount == game.words.length) { 
+      // I don't like this winning condition. No time to fix. ㅠ.ㅠ
+
+       //Win Alert. Going to add display pop up when clear the level
+       alert("You cleared level");
+       //
+
+       clearInterval(fallingStars); // clear falling star          
+       clearInterval(drawingStars); // clear drawing star function
+      game.data[game.currentPlayerIndex].level ++; // level up
+      $playerLevel.text(game.data[game.currentPlayerIndex].level); // display player's current level
+      game.$wordsDivs.length = 0;
+      game.count = 0;
+      // Start button flashing
+      flashing = setInterval(() => {
+         flashingButton();
+      }, 1000);
+      $startBtn.prop("disabled", false);
+      game.setWords(game.nickName); // Set word for current level
+          
+     }
+   }
+ //////////////////////////////////
+}
   // Quit button to stop the game
   $quitBtn.on("click", (event) => {
     clearInterval(fallingStars); // clear fallin star function
@@ -435,6 +445,8 @@ $(() => {
     $startBtn.prop("disabled",false);
     $playerLife.text('');
     $playerLevel.text('');
+    wordInputArr.length = 0;
+    tempArray.length = 0;
   });
 
   $instBtn.on('click',openModal)

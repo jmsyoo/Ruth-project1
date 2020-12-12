@@ -5,6 +5,7 @@
 ## Concept
 This game aims to help people to improve their keyboard typing skills while having fun.
 
+![](images/Starfall.jpg)
 ## Technologies Used:
 
 1. HTML
@@ -21,9 +22,14 @@ This game aims to help people to improve their keyboard typing skills while havi
 4. Add JavaScript
 
 ### Streach Goals
- 1. Use random words generate API
- 2. Add coutry select dropdown with image when entering nickname
- 2. Star falling diagonally after user level up
- 3. World record Board
- 4. Change shape of word div to star
+ 1. Use random words generate API.
+ 2. Add coutry select dropdown with image when entering nickname.
+ 2. Star falling diagonally after user level up.
+ 3. World record Board.
+ 4. Change shape of word div to star.
  5. Add animation when user typed correctly to disappear star.
+
+ ## Challenges
+ 1. shuffle words in array efficiently.
+ 2. falling words sequaantially.
+ 3. writing code dry reseting game.

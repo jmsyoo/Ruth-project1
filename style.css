@@ -94,6 +94,7 @@ p{
     height: 30%;
     margin: 1%;
     padding: 1%;
+    margin-top: 0;;
 }
 .row2{
     width: 100%;
@@ -150,9 +151,6 @@ p{
     color: var(--star);
     font-size: 3rem;
 }
-button{
-    /* color: var(--star); */
-}
 input{
     height: 35px;
     width: 30%;
@@ -200,23 +198,23 @@ input{
 }
 #startBtn {
     float: right;
-    height: 50px;
+    height: 45px;
     padding: 1%;
     border-radius: 50%;
     margin-right: 2rem;
     border: none;
-    width: 50px;
+    width: 45px;
     background-color: var(--green);
     /* color: var(--white); */
 }
 #quitBtn{
     float: right;
-    height: 50px;
+    height: 45px;
     padding: 1%;
     border-radius: 50%;
     margin-right: 2rem;
     border: none;
-    width: 50px;
+    width: 45px;
     background-color: var(--red);
     color: var(--white);
 }
@@ -271,35 +269,36 @@ input{
     width: 100%;
 }
 #instBtn{
-    width: 5rem;
-    height: 5rem;
+    width: 6rem;
+    height: 6rem;
     float: right;
     border: none;
     border-radius: 50%;
     background-color: #fdb813;
-    margin: 5px 0 0 5px;
+    margin: 5px 5px 0 0;
     cursor: pointer;
     color: var(--white);
     font-size: 2rem;
 }
 #recordBtn{
-    width: 5rem;
-    height: 5rem;
-    float: right;
+    width: 7.5rem;
+    height: 7.5rem;
+    float: left;
     border: none;
     border-radius: 50%;
     background-color: var(--star);
     margin: 5px 0 0 5px;
     cursor: pointer;
     color: var(--sky);
+    font-size: 2rem;
 }
 #close{
-    font-size: 4rem;
+    font-size: 2rem;
     cursor: pointer;
     color: var(--sky);
 }
 #closeRecord{
-    font-size: 4rem;
+    font-size: 2rem;
     cursor: pointer;
     color: var(--sky);
     display: inline-block;
