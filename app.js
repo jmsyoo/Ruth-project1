@@ -236,19 +236,17 @@ $(() => {
     html += '<th>' + 'Level' + '</th>'
     html += '</tr>'
     html += '</thead>'
-    html += "<tbody>";
+    html += '<tbody>';
     $(game.data).each(function (key, value) {
-      html += "<tr>";
-      html += "<td>" + value.nickName + "</td>";
-      html += "<td>" + value.score + "</td>";
-      html += "<td>" + value.level + "</td>";
-      html += "</tr>";
+      html += '<tr>';
+      html += '<td style="text-align:left;">' + value.nickName + '</td>';
+      html += '<td>' + value.score + '</td>';
+      html += '<td>' + value.level + '</td>';
+      html += '</tr>';
     });
     html += "</tbody>";
     $(".table").html(html);
   };
-
- // Event Handler
   const draw = () => {
     game.draw();
     const maxIndex = game.words.length;
@@ -304,6 +302,8 @@ $(() => {
               if(tempArray.length == 5){ // So if temparray length becomes 5 stops the falling star. I will callback function here.
                   clearInterval(fallingStars);
                   $wordInput.prop("disabled", true);
+                  alert('Game Over');
+                  $quitBtn.text('RESART');
               }
           }
           /////////////////////////////////////////////////////
@@ -329,63 +329,6 @@ $(() => {
         $(event.target).prop("disabled",true).removeClass('buttonAble').addClass("buttonDsiable")
     })
   };
-
-  // Event Listiner
-  $submitNickNameBtn.on("click", (event) => {
-    if($nickName.val()!= ''){
-        game.generatePlayer($nickName.val()); // Generate player functin confirmed.
-    
-    // Play button to show.
-    $(".btn-group").hide();
-    $(".playBtn-group").fadeIn("slow");
-
-    // Letting plyer knows where to click for starting the game.
-    flashing = setInterval(() => {
-        flashingButton();
-     }, 1000);
-    }else{
-        alert('Please write your nickname');
-    }  
-  });
-  $startBtn.on("click", (event) => {
-    game.findNickName(game.nickName); // find current player index for data array
-    $wordInput.prop("disabled", false);
-
-    $playerLife.text(game.data[game.currentPlayerIndex].life); // Display player life
-    $playerLevel.text(game.data[game.currentPlayerIndex].level); // Display player level
-
-    plusTop = game.SetTop(); // Set falling star top default 0
-
-    drawingStars = setInterval(draw, game.drawSpeed);
-    fallingStars = setInterval(down, game.downSpeed);
-  });
-
-  $wordInput.on("keyup", (event) => {
-    let currentStarCount = $(".container").find(".star").length; // Check if stars in the sky
-
-    if (currentStarCount > 0) {
-      let inputValue = $(event.target).val();
-      // if so start looping stars to check if typed word is matching.
-      $(game.$wordsDivs).each(function (key, value) {
-
-        if (inputValue === value.text()) {
-          wordInputArr.push(inputValue); // This push in array is for checking winning condition.
-          totalScore = totalScore + game.score; 
-          game.data[game.currentPlayerIndex].score = totalScore; // update data for changed score
-          $playerScore.text(totalScore); // update total score
-
-          // if typed value is matching with falling words
-          game.$wordsDivs[key].remove(); // remove falling word from sky
-          plusTop[key] = -10000; // This line of code need to be replaced with something else.
-
-          $(event.target).val(""); // set input value default empty
-
-        winngingCondition(); // Call function
-        }      
-      });
-    }
-  });
-
   const winngingCondition = () => {
     // Below code is winning condition
     if ($playerLife.text() != 0) { // life is not 0
@@ -417,6 +360,62 @@ $(() => {
    }
  //////////////////////////////////
 }
+
+  // Event Listiner
+  $submitNickNameBtn.on("click", (event) => {
+    if($nickName.val()!= ''){
+        game.generatePlayer($nickName.val()); // Generate player functin confirmed.
+    
+    // Play button to show.
+    $(".btn-group").hide();
+    $(".playBtn-group").fadeIn("slow");
+
+    // Letting plyer knows where to click for starting the game.
+    flashing = setInterval(() => {
+        flashingButton();
+     }, 1000);
+    }else{
+        alert('Please write your nickname');
+    }  
+  });
+  $startBtn.on("click", (event) => {
+    game.findNickName(game.nickName); // find current player index for data array
+    $wordInput.prop("disabled", false);
+    $quitBtn.text('QUIT');
+
+    $playerLife.text(game.data[game.currentPlayerIndex].life); // Display player life
+    $playerLevel.text(game.data[game.currentPlayerIndex].level); // Display player level
+
+    plusTop = game.SetTop(); // Set falling star top default 0
+
+    drawingStars = setInterval(draw, game.drawSpeed);
+    fallingStars = setInterval(down, game.downSpeed);
+  });
+  $wordInput.on("keyup", (event) => {
+    let currentStarCount = $(".container").find(".star").length; // Check if stars in the sky
+
+    if (currentStarCount > 0) {
+      let inputValue = $(event.target).val();
+      // if so start looping stars to check if typed word is matching.
+      $(game.$wordsDivs).each(function (key, value) {
+
+        if (inputValue.toLowerCase() === value.text()) {
+          wordInputArr.push(inputValue); // This push in array is for checking winning condition.
+          totalScore = totalScore + game.score; 
+          game.data[game.currentPlayerIndex].score = totalScore; // update data for changed score
+          $playerScore.text(totalScore); // update total score
+
+          // if typed value is matching with falling words
+          game.$wordsDivs[key].remove(); // remove falling word from sky
+          plusTop[key] = -10000; // This line of code need to be replaced with something else.
+
+          $(event.target).val(""); // set input value default empty
+
+        winngingCondition(); // Call function
+        }      
+      });
+    }
+  });
   // Quit button to stop the game
   $quitBtn.on("click", (event) => {
     clearInterval(fallingStars); // clear fallin star function

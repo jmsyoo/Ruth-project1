@@ -217,6 +217,7 @@ input{
     width: 45px;
     background-color: var(--red);
     color: var(--white);
+    text-align: center;
 }
 #modal{
     position: fixed;
@@ -321,10 +322,14 @@ input{
     padding: 8px;
     width: 33%;
     border: 1px solid gray;
+    text-align: center;
+    color: var(--sky);
+    background-color: lightgray;
 }
 .table tbody tr td{
     font-size: 1.7rem;
     border: 1px solid gray;
     padding: 4px;
+    text-align: right;
 }
 
