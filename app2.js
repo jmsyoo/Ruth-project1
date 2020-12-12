@@ -124,7 +124,6 @@ class Game {
         return (this.words = this.shuffle(words.data[level - 1].words));
       } else {
         this.words = this.shuffle(words.data[level - 1].words); // directly assign words for current player
-        console.log(this.words);
       }
       ///////////////////////////////
     }
@@ -280,8 +279,6 @@ $(() => {
         topArray[i] += downHeight;
 
         if (topArray[i] > bottomLine + downHeight) {
-          console.log(game.words[i] + ' : '+ topArray[i] + ':' + bottomLine); // Tracking stars' top
-
           // This line of code!!!!!!!!! 
           game.$wordsDivs[i].remove(); 
           // This remove the star from container but
@@ -292,15 +289,15 @@ $(() => {
           // 1. Declare tempArray
           // 2. push word name into tempArray if's it's not duplicated whenever star hit groud.
           // 3. Keep doing until tempArray length is same as player's life.
-
-          console.log(tempArray)
           ////////////////////////////////////////////////////
+          let playerLifeTest = game.data[game.currentPlayerIndex].life;
           if(!tempArray.includes(game.words[i])){ // remove duplicated star
 
               let prvLenth =  tempArray.length; // previous length of temp array
               tempArray.push(game.words[i]); // push only unique word
               let curLength = tempArray.length; // current length of temp array
 
+              console.log(tempArray)
               game.data[game.currentPlayerIndex].life--; // when star hit the ground, it pushed into temp array and life in data is deducted.            
               $playerLife.text(life - (curLength - prvLenth )); // display current life 
 
@@ -383,10 +380,8 @@ $(() => {
 
           $(event.target).val(""); // set input value default empty
 
-        winngingCondition();
-        }
-
-        
+        winngingCondition(); // Call function
+        }      
       });
     }
   });
@@ -408,6 +403,9 @@ $(() => {
       $playerLevel.text(game.data[game.currentPlayerIndex].level); // display player's current level
       game.$wordsDivs.length = 0;
       game.count = 0;
+      tempArray.length = 0;
+      wordInputArr.length = 0;
+      game.data[game.currentPlayerIndex].life = 5;
       // Start button flashing
       flashing = setInterval(() => {
          flashingButton();

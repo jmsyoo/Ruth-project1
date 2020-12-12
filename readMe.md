@@ -16,7 +16,7 @@ This game aims to help people to improve their keyboard typing skills while havi
 
 ### Develpment Plan
 
-1. Overall Design
+1. Design
 2. HTML wire frame
 3. CSS
 4. Add JavaScript
@@ -31,5 +31,5 @@ This game aims to help people to improve their keyboard typing skills while havi
 
  ## Challenges
  1. shuffle words in array efficiently.
- 2. falling words sequaantially.
+ 2. falling words sequantially.
  3. writing code dry reseting game.
