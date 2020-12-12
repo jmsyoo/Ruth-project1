@@ -156,8 +156,8 @@ class Game {
     let left = this.setLeftWidth(); // Genearate random left
 
     // check if star is drew outside of container
-    if (left + 150 >= this.$eq.width()) {
-      left = left - 150 + "px"; // if it's outside, deduct word div length
+    if (left + 200 >= this.$eq.width()) {
+      left = left - 200 + "px"; // if it's outside, deduct word div length
     } else {
       left + "px";
     }
