@@ -198,6 +198,8 @@ $(() => {
   const $quitBtn = $("#quitBtn"); // quit game button
   const $instBtn = $("#instBtn"); // open instruction modal button
   const $closeBtn = $("#close"); // close instructon modal button
+  const $recordBtn = $("#recordBtn") // Record modal button
+  const $closeRecordBtn = $("#closeRecord");
   // Global variables
   var $playerLife = $("#playerLife");
   var $playerLevel = $("#playerLevel");
@@ -206,19 +208,45 @@ $(() => {
   var drawingStars = null;
   var fallingStars = null;
   var tempArray = [];
+  var wordInputArr = [];
   var plusTop = null;
   var flashing = null;
   // Create Instance
   const game = new Game($sky);
 
   const openModal = () => {
-    $("#modal").css("display","flex");
-}
-const closeModal = () => {
-    $("#modal").css("display",'none');
-}
-$instBtn.on('click',openModal)
-$closeBtn.on('click',closeModal);
+    $("#modal").css("display", "flex");
+  };
+  const closeModal = () => {
+    $("#modal").css("display", "none");
+  };
+
+  const openRecordModal = () => {
+    $("#modal2").css("display", "flex");
+  };
+  const closeRecordModal = () => {
+    $("#modal2").css("display", "none");
+  }
+  const loadPlayData = () => {
+    let html = "";
+    html += '<thead>'
+    html += '<tr>'
+    html += '<th>' + 'Nickname' + '</th>'
+    html += '<th>' + 'Score' + '</th>'
+    html += '<th>' + 'Level' + '</th>'
+    html += '</tr>'
+    html += '</thead>'
+    html += "<tbody>";
+    $(game.data).each(function (key, value) {
+      html += "<tr>";
+      html += "<td>" + value.nickName + "</td>";
+      html += "<td>" + value.score + "</td>";
+      html += "<td>" + value.level + "</td>";
+      html += "</tr>";
+    });
+    html += "</tbody>";
+    $(".table").html(html);
+  };
 
  // Event Handler
   const draw = () => {
@@ -241,26 +269,28 @@ $closeBtn.on('click',closeModal);
     let downHeight = parseInt(game.height.replace("px", ""));
 
     // Calculate bottom line where word to hit damage life
-    let totalHeight = $(game.$eq).height(); // total height of falling area
-    let groundHeight = $("#ground").height(); // ground height
-    let bottomLine = totalHeight - groundHeight;
+    let totalHeight = $(game.$eq).height(); // get total height of falling area
+    let groundHeight = $("#ground").height(); // get ground height
+    let bottomLine = totalHeight - groundHeight; // get line where star to hit and deduct player's life.
 
-    for (let i = 0; i < game.words.length; i++) {
+    for (let i = 0; i < game.words.length; i++) { // Loop current stars
       if (i < game.$wordsDivs.length) {
         game.$wordsDivs[i].css("top", topArray[i] + "px");
         topArray[i] += downHeight;
 
         if (topArray[i] > bottomLine + downHeight) {
-          console.log(game.words[i] + ' : '+ topArray[i] + ':' + bottomLine);
+          console.log(game.words[i] + ' : '+ topArray[i] + ':' + bottomLine); // Tracking stars' top
 
           // This line of code!!!!!!!!! 
           game.$wordsDivs[i].remove(); 
-          // This remove the star from container 
-          // This code works only disapearing star from container div and still running behind.
-          // so it keeps deducting player's life eventhough star is landed on the ground.
+          // This remove the star from container but
+          // code only works disapearing star from sky and still running behind.
+          // so eventhough the star is disappeard, it keeps deducting player's life.
 
-          // In order to solve the problem, I have to go around.(Not sure this is the right way but it made works)
-          // Add words to temp array
+          //*** In order to solve the problem, I have to go around.(Not sure this is the right way but it works)***
+          // 1. Declare tempArray
+          // 2. push word name into tempArray if's it's not duplicated whenever star hit groud.
+          // 3. Keep doing until tempArray length is same as player's life.
 
           ////////////////////////////////////////////////////
           if(!tempArray.includes(game.words[i])){ // remove duplicated star
@@ -272,11 +302,11 @@ $closeBtn.on('click',closeModal);
               game.data[game.currentPlayerIndex].life--; // when star hit the ground, it pushed into temp array and life in data is deducted.            
               $playerLife.text(life - (curLength - prvLenth )); // display current life 
 
-              if(tempArray.length == 5){ // So if temparray length becomes 5 stops the falling star.
+              if(tempArray.length == 5){ // So if temparray length becomes 5 stops the falling star. I will callback function here.
                   clearInterval(fallingStars);
               }
           }
-          ////////////////////////////////////////////////////
+          /////////////////////////////////////////////////////
 
           if (game.words.length == game.$wordsDivs.length) {
             if ($(".star").length === 0) {
@@ -336,20 +366,22 @@ $closeBtn.on('click',closeModal);
       $(game.$wordsDivs).each(function (key, value) {
 
         if (inputValue === value.text()) {
-          totalScore = totalScore + game.score;
-          game.data[game.currentPlayerIndex].score = totalScore;
-          $playerScore.text(totalScore);
+          wordInputArr.push(inputValue); // This push in array is for checking winning condition.
+          totalScore = totalScore + game.score; 
+          game.data[game.currentPlayerIndex].score = totalScore; // update data for changed score
+          $playerScore.text(totalScore); // update total score
 
           // if typed value is matching with falling words
           game.$wordsDivs[key].remove(); // remove falling word from sky
-          plusTop[key] = -10000;
+          plusTop[key] = -10000; // This line of code need to be replaced with something else.
 
-          $(event.target).val(""); // set input value default empty       
-        }
-
-        // Below code is winning condition
+          $(event.target).val(""); // set input value default empty
+          
+          // Below code is winning condition
           if ($playerLife.text() != 0) { // life is not 0
-            if ($(".star").length === 0 && game.$wordsDivs.length == 0) { // no stars in the sky // !!!!!!!!!!!!!!! This line of code need to be fixed
+             let totalWordCount = wordInputArr.length + tempArray.length;
+            if ($(".star").length === 0 && totalWordCount == game.words.length) { 
+             // I don't like this winning condition. No time to fix. ㅠ.ㅠ
 
               //Win Alert. Going to add display pop up when clear the level
               alert("You cleared level");
@@ -371,6 +403,9 @@ $closeBtn.on('click',closeModal);
             }
           }
         //////////////////////////////////
+        }
+
+        
       });
     }
   });
@@ -401,4 +436,16 @@ $closeBtn.on('click',closeModal);
     $playerLife.text('');
     $playerLevel.text('');
   });
+
+  $instBtn.on('click',openModal)
+  $closeBtn.on('click',closeModal);
+
+  $recordBtn.on("click",(event) => {
+      openRecordModal();
+      loadPlayData();
+  });
+  $closeRecordBtn.on("click", (event) => {
+      closeRecordModal();
+  })
+  
 });

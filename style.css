@@ -242,6 +242,34 @@ input{
     display: flex;
     flex-direction: column;
 }
+#modal2{
+    position: fixed;
+    top: 0;
+    left: 5;
+    width: 900px;
+    height: 100%;
+    background-color:  var(--sky);
+    z-index: 1;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+#modal-textbox2{
+    background-color: var(--white);
+    border-radius: 5px;
+	height: 350px;
+	width: 550px;
+	margin: 15px;
+    padding: 12px;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+}
+#modalBtns{
+    height: 10%;
+    width: 100%;
+}
 #instBtn{
     width: 5rem;
     height: 5rem;
@@ -254,15 +282,50 @@ input{
     color: var(--white);
     font-size: 2rem;
 }
+#recordBtn{
+    width: 5rem;
+    height: 5rem;
+    float: right;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--star);
+    margin: 5px 0 0 5px;
+    cursor: pointer;
+    color: var(--sky);
+}
 #close{
     font-size: 4rem;
     cursor: pointer;
     color: var(--sky);
+}
+#closeRecord{
+    font-size: 4rem;
+    cursor: pointer;
+    color: var(--sky);
+    display: inline-block;
 }
 .buttonDisable{
     color:gray;
 }
 .buttonAble{
     color: var(--star);
+}
+
+.table{
+    color: gray;
+    margin: 1%;
+    border: 1px solid gray;
+    width: 100%;
+}
+.table thead tr th{
+    font-size: 2rem;
+    padding: 8px;
+    width: 33%;
+    border: 1px solid gray;
+}
+.table tbody tr td{
+    font-size: 1.7rem;
+    border: 1px solid gray;
+    padding: 4px;
 }
 
