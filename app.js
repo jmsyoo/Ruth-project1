@@ -9,9 +9,9 @@ class Player {
 }
 class Words {
   constructor() {
-    this.data = [ //DB
+    this.data = [
       {
-        level: 1, // javascript
+        level: 1,
         words: [
           "let",
           "length",
@@ -30,7 +30,7 @@ class Words {
         point: 100,
       },
       {
-        level: 2, // C#
+        level: 2,
         words: [
           "public",
           "protected",
@@ -54,7 +54,7 @@ class Game {
   constructor($eq) {
     this.nickName = null;
     this.level = null;
-    this.data = []; //DB
+    this.data = [];
     this.startGame = false;
     this.isGameOver = false;
     this.width = "200px";
