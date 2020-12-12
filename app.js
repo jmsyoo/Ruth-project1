@@ -283,19 +283,18 @@ $(() => {
           // code only works disapearing star from sky and still running behind.
           // so eventhough the star is disappeard, it keeps deducting player's life.
 
-          //*** In order to solve the problem, I have to go around.(Not sure this is the right way but it works)***
+          //*** Below code is solution (Not sure this is the right way but it works)***
           // 1. Declare tempArray
           // 2. push word name into tempArray if's it's not duplicated whenever star hit groud.
           // 3. Keep doing until tempArray length is same as player's life.
           ////////////////////////////////////////////////////
-          let playerLifeTest = game.data[game.currentPlayerIndex].life;
           if(!tempArray.includes(game.words[i])){ // remove duplicated star
 
               let prvLenth =  tempArray.length; // previous length of temp array
               tempArray.push(game.words[i]); // push only unique word
               let curLength = tempArray.length; // current length of temp array
 
-              console.log(tempArray)
+              console.log(tempArray) // Check words pushed into tempArray
               game.data[game.currentPlayerIndex].life--; // when star hit the ground, it pushed into temp array and life in data is deducted.            
               $playerLife.text(life - (curLength - prvLenth )); // display current life 
 
@@ -310,7 +309,7 @@ $(() => {
 
           if (game.words.length == game.$wordsDivs.length) {
             if ($(".star").length === 0) {
-            //   alert("clear");
+
               clearInterval(fallingStars);
               clearInterval(drawingStars);
               winngingCondition();
@@ -329,37 +328,37 @@ $(() => {
         $(event.target).prop("disabled",true).removeClass('buttonAble').addClass("buttonDsiable")
     })
   };
+  // Below code is winning condition
+  // I don't like this winning condition. No time to fix. ㅠ.ㅠ
   const winngingCondition = () => {
-    // Below code is winning condition
-    if ($playerLife.text() != 0) { // life is not 0
+    if ($playerLife.text() != 0) {      // life is not 0
+
       let totalWordCount = wordInputArr.length + tempArray.length;
-     if ($(".star").length === 0 && totalWordCount == game.words.length) { 
-      // I don't like this winning condition. No time to fix. ㅠ.ㅠ
+      if ($(".star").length === 0 && totalWordCount == game.words.length) {
+        
+        //Win Alert. Going to add display pop up when clear the level
+        alert("You cleared level");
+        //
 
-       //Win Alert. Going to add display pop up when clear the level
-       alert("You cleared level");
-       //
-
-       clearInterval(fallingStars); // clear falling star          
-       clearInterval(drawingStars); // clear drawing star function
-      game.data[game.currentPlayerIndex].level ++; // level up
-      $playerLevel.text(game.data[game.currentPlayerIndex].level); // display player's current level
-      game.$wordsDivs.length = 0;
-      game.count = 0;
-      tempArray.length = 0;
-      wordInputArr.length = 0;
-      game.data[game.currentPlayerIndex].life = 5;
-      // Start button flashing
-      flashing = setInterval(() => {
-         flashingButton();
-      }, 1000);
-      $startBtn.prop("disabled", false);
-      game.setWords(game.nickName); // Set word for current level
-          
-     }
-   }
- //////////////////////////////////
-}
+        clearInterval(fallingStars); // clear falling star
+        clearInterval(drawingStars); // clear drawing star function
+        game.data[game.currentPlayerIndex].level++; // level up
+        $playerLevel.text(game.data[game.currentPlayerIndex].level); // display player's current level
+        game.$wordsDivs.length = 0;
+        game.count = 0;
+        tempArray.length = 0;
+        wordInputArr.length = 0;
+        game.data[game.currentPlayerIndex].life = 5;
+        // Start button flashing
+        flashing = setInterval(() => {
+          flashingButton();
+        }, 1000);
+        $startBtn.prop("disabled", false);
+        game.setWords(game.nickName); // Set word for current level
+      }
+    }
+    //////////////////////////////////
+  };
 
   // Event Listiner
   $submitNickNameBtn.on("click", (event) => {
